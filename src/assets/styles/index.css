@@ -1,0 +1,18 @@
+/* * {
+    background: url('../img/workspace-background.png');
+}
+ */
+
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@100;300;500;700&display=swap");
+
+* {
+    box-sizing: inherit;
+}
+
+html {
+    font-family: "Roboto", sans-serif;
+}
+
+.App {
+    display: flex;
+}
