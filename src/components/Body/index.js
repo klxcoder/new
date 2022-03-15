@@ -9,7 +9,12 @@ function Body() {
     const [{}, drop] = useDrop(() => ({
         accept: 'images',
         drop: (item, monitor) => {
-            let toado = monitor.getClientOffset()
+            const initial = monitor.getInitialSourceClientOffset()
+            const differ = monitor.getDifferenceFromInitialOffset()
+            let toado = {
+                x: initial.x + differ.x,
+                y: initial.y + differ.y
+            }
             console.log(toado)
             addImageToBoard(item, toado)
         }
