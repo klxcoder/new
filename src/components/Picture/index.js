@@ -1,24 +1,28 @@
 import React from 'react'
 import { useDrag } from 'react-dnd'
 
-function Picture({ id, url, style }) {
-
-    const [{ isDragging }, drag] = useDrag(() => ({
+function Picture({ id, url }) {
+    const [collected, dragSourceRef, dragPreviewRef] = useDrag(() => ({
         type: 'images',
-        item: { id: id },
-        collect: (monitor) => ({
-            isDragging: !!monitor.isDragging(),
-        }),
+        item: {id},
+        collect: (monitor) => {
+            return {
+                offset: monitor.getInitialClientOffset()
+            }
+        }
     }));
 
     return (
-        < img
-            ref={drag}
-            src={url}
-            width='100px'
-            height='100px'
-        // style={styles}
-        />
+        <div>
+            <img
+                ref={dragSourceRef}
+                src={url}
+                width={100}
+                height={100}
+                style={{border:"1px solid black"}}
+            />
+            {/* {JSON.stringify(collected)} */}
+        </div>
     )
 }
 

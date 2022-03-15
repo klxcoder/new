@@ -5,41 +5,29 @@ import { iconLibrary } from '../../services/iconLibrary'
 import Picture from '../Picture'
 
 function Body() {
-
     const [board, setBoard] = useState([])
-    const [element, setElement] = useState([])
-    // const [coordinates, setCoordinates] = useState({})
-
-    const [{ isOver }, drop] = useDrop(() => ({
+    const [{}, drop] = useDrop(() => ({
         accept: 'images',
         drop: (item, monitor) => {
             let toado = monitor.getClientOffset()
+            console.log(toado)
             addImageToBoard(item, toado)
-        },
-        collect: (monitor) => ({
-            isOver: !!monitor.isOver(),
-        }),
+        }
     }))
-
-    // let indexElement = 1;
     const addImageToBoard = (item, toado) => {
-        
-        
-        setBoard(prev => [...prev, iconLibrary[item.id-1]])
-        // setElement(state => {})
+        setBoard(prev => [...prev, 
+            {...iconLibrary[item.id], toado}
+        ])
     }
-    console.log(element);
-
     return (
-
-        <div className={styles.body} ref={drop}>
-            <div className={styles.iconImages}>
-                {
-                    board.map(icon => {
-                        return <Picture url={icon.images} key={icon.id} />
-                    })
-                }
-            </div>
+        <div className={styles.body} ref={drop} style={{border: ""}}>
+            {
+                board.map((icon, index) => {
+                    return <div key={index} className={styles.iconImages} style={{left: icon.toado.x, top:icon.toado.y}}>
+                        <Picture url={icon.images} />
+                    </div>
+                })
+            }
         </div>
     )
 }

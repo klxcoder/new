@@ -5,9 +5,8 @@ import { iconLibrary } from '../../services/iconLibrary';
 import Picture from '../Picture'
 
 function Navbar() {
-
     return (
-        <div className={styles.navbar}>
+        <div className={styles.navbar} style={{border: "10px solid green"}}>
 
             <ul className={styles.boxCharacters}>
                 {characters.map((character, index) => (
@@ -20,9 +19,8 @@ function Navbar() {
             <ul className={styles.libraryIconBox}>
                 {iconLibrary.map((icon) => (
                     <li key={icon.id}>
-               
-                        <div className={styles.iconImages}>
-                            <Picture url={icon.images} id={icon.id} key={icon.id} />
+                        <div className={styles.iconImages} style={{border: '2px solid pink'}}>
+                            <Picture url={icon.images} id={icon.id} />
                         </div>
                         <span className={styles.title}>{icon.title}</span>
                     </li>
