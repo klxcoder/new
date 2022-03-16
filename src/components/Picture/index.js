@@ -1,12 +1,12 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { useDrag } from 'react-dnd'
 
-function Picture({ id, url }) {
-    const [{}, dragSourceRef, dragPreviewRef] = useDrag(() => ({
+function Picture({ item, url }) {
+    const [{}, dragSourceRef] = useDrag(() => ({
         type: 'images',
-        item: {id},
+        item: [item],
     }));
-
+    
     return (
         <div>
             <img
@@ -17,4 +17,4 @@ function Picture({ id, url }) {
     )
 }
 
-export default Picture;
+export default memo(Picture);
