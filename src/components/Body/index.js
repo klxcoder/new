@@ -44,7 +44,7 @@ function Body() {
             <div className={styles.btnBox}>
                 <div className={styles.heading}>
                     <div className={styles.btnFullscreen}></div>
-                    <a href="http://j.mp/zQO1Ac" className={styles.title}>Little Alchemy 2 is out now!</a>
+                    <a href="http://j.mp/zQO1Ac" className={styles.title}>Little Alchemy 2 is out nows!</a>
                 </div>
 
                 <div className={styles.footer}>
