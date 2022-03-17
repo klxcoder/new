@@ -19,10 +19,10 @@ function Navbar() {
             </ul>
 
             <ul className={styles.libraryIconBox}>
-                {iconLibrary.map((icon) => (
+                {iconLibrary.map((icon, index) => (
                     <li key={icon.id}>
                         <div className={styles.iconImages}>
-                            <Picture url={icon.images} item={icon} />
+                            <Picture pictureId={index + 1} url={icon.images} pictureItem={icon} />
                         </div>
                         <span className={styles.title}>{icon.title}</span>
                     </li>
