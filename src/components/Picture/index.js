@@ -92,9 +92,9 @@ function Picture({ left, right, pictureId, pictureItem, url, setBoard }) {
                 ref={dragSourceRef}
                 src={url}
             />
-            {pictureId}
-            {left?'left':''}
-            {right?'right':''}
+            {/* {pictureId} */}
+            {/* {left?'left':''} */}
+            {/* {right?'right':''} */}
         </div>
     )
 }

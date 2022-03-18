@@ -16,7 +16,7 @@ function Navbar() {
             </ul>
 
             <ul className={styles.libraryIconBox}>
-                {iconLibrary.map((icon, index) => (
+                {iconLibrary.filter(icon => ['air', 'earth', 'fire', 'water'].includes(icon.title)).map((icon, index) => (
                     <li key={icon.id}>
                         <div className={styles.iconImages}>
                             <Picture right={true} pictureId={index + 1} url={icon.images} pictureItem={icon} />
