@@ -54,15 +54,29 @@ function Picture({ left, right, pictureId, pictureItem, url, setBoard }) {
                     y: initial.y + differ.y
                 }
                 console.log({toado});
-                // addImageToBoard(pictureItem, toado, pictureId, left, right)
-
-                // Todo: process idAfterCrash here
                 const idAfterCrash = getIdAfterCrash(dragPictureItem.title, pictureItem.title);
-                if(idAfterCrash != -1) {
+                if(idAfterCrash != -1) { // if collision occurs
                     setBoard(prev => {
                         const newId = getRndInteger(11111, 99999);
-                        return [...prev, { ...iconLibrary[idAfterCrash], toado, pictureId: newId }]
+                        // add icon after collison to the board
+                        const newBoard = [...prev, { ...iconLibrary[idAfterCrash], toado, pictureId: newId }];
+                        // remove `drag icon` and remove `drop icon`
+                        return newBoard.filter(icon => icon.pictureId !== dragPictureId && icon.pictureId !== pictureId);
                     });
+                } else { // if collison not occur
+                    // will move drag icon to new toado
+                    setBoard(prev => {
+                        const newBoard = [...prev].map(icon => {
+                            if(icon.pictureId === dragPictureId) {
+                                const newIcon = {...icon};
+                                // change old toado to new toado
+                                newIcon.toado = toado;
+                                return newIcon;
+                            }
+                            return icon;
+                        });
+                        return newBoard;
+                    })
                 }
             }
         }
