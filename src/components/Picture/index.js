@@ -1,10 +1,10 @@
 import React, { memo } from 'react'
 import { useDrag } from 'react-dnd'
 
-function Picture({ canStillDrag, pictureId, pictureItem, url }) {
-    const [{}, dragSourceRef] = useDrag(() => ({
+function Picture({ left, right, pictureId, pictureItem, url }) {
+    const [{ }, dragSourceRef] = useDrag(() => ({
         type: 'images',
-        item: {pictureItem, pictureId},
+        item: { left, right, pictureItem, pictureId },
     }));
     return (
         <div>
@@ -13,6 +13,8 @@ function Picture({ canStillDrag, pictureId, pictureItem, url }) {
                 src={url}
             />
             {pictureId}
+            {left?'left':''}
+            {right?'right':''}
         </div>
     )
 }
