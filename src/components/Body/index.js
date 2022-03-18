@@ -4,26 +4,27 @@ import { useDrop } from 'react-dnd'
 import { iconLibrary } from '../../services/iconLibrary'
 import Picture from '../Picture'
 
-
 function getRndInteger(min, max) {
     return Math.floor(Math.random() * (max - min + 1) ) + min;
 }
-
-const summaryBoard = (board) => board.map(icon => icon.pictureId);
 
 function Body() {
     const [board, setBoard] = useState([])
 
     const [{ }, drop] = useDrop(() => ({
         accept: 'images',
-        drop: ({ left, right, pictureItem, pictureId }, monitor) => {
+        drop: ({ left, right, dragPictureItem, dragPictureId }, monitor) => {
+            const pictureId = dragPictureId;
+            const pictureItem = dragPictureItem;
             const initial = monitor.getInitialSourceClientOffset()
             const differ = monitor.getDifferenceFromInitialOffset()
-            let toado = {
-                x: initial.x + differ.x,
-                y: initial.y + differ.y
+            if(initial) {
+                let toado = {
+                    x: initial.x + differ.x,
+                    y: initial.y + differ.y
+                }
+                addImageToBoard(pictureItem, toado, pictureId, left, right)
             }
-            addImageToBoard(pictureItem, toado, pictureId, left, right)
         }
     }))
 
@@ -34,6 +35,7 @@ function Body() {
                 const newBoard = [...prev].map(icon => {
                     if(icon.pictureId === pictureId) {
                         const newIcon = {...icon};
+                        // change old toado to new toado
                         newIcon.toado = toado;
                         return newIcon;
                     }
@@ -43,6 +45,8 @@ function Body() {
             }
             // if drag from right => will add
             if (right) {
+                // increase range of this range for more correct
+                // or use `uuid library` for generating unique number
                 const newId = getRndInteger(11111, 99999);
                 return [...prev, { ...iconLibrary[pictureItem.id], toado, pictureId: newId }]
             }
@@ -57,7 +61,7 @@ function Body() {
                 {
                     board.map((icon, index) => {
                         return <div key={index} className={styles.iconImages} style={{ left: icon.toado.x, top: icon.toado.y }}>
-                            <Picture left={true} pictureId={icon.pictureId} pictureItem={icon} url={icon.images} />
+                            <Picture left={true} pictureId={icon.pictureId} pictureItem={icon} url={icon.images} setBoard={setBoard} />
                         </div>
                     })
                 }
