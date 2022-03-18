@@ -6,6 +6,35 @@ function getRndInteger(min, max) {
     return Math.floor(Math.random() * (max - min + 1) ) + min;
 }
 
+const getIndex = (title) => {
+    for(let index=0; index<iconLibrary.length; index++) {
+        if(iconLibrary[index].title === title)
+            return index;
+    }
+    return -1;
+}
+
+const getIdAfterCrash = (dragTitle, dropTitle) => {
+    // fire + air = energy
+    // fire + water = steam
+    // fire + earth = lava
+    // water + earth = mud
+    // water + lava = obsidian
+    // water + air = rain
+    // air + earth = dust
+    const obj = {}
+    obj['fire' + 'air'] = 'energy'; obj['air' + 'fire'] = 'energy';
+    obj['fire' + 'water'] = 'steam'; obj['water' + 'fire'] = 'steam';
+    obj['fire' + 'earth'] = 'lava'; obj['earth' + 'fire'] = 'lava';
+    obj['water' + 'earth'] = 'mud'; obj['earth' + 'water'] = 'mud';
+    obj['water' + 'lava'] = 'obsidian'; obj['lava' + 'water'] = 'obsidian';
+    obj['water' + 'air'] = 'rain'; obj['air' + 'water'] = 'rain';
+    obj['air' + 'earth'] = 'dust'; obj['air' + 'earth'] = 'dust';
+    const newTitle = obj[dragTitle + dropTitle];
+    if(!newTitle) return -1;
+    return getIndex(newTitle);
+}
+
 function Picture({ left, right, pictureId, pictureItem, url, setBoard }) {
     const [{ }, dragSourceRef] = useDrag(() => ({
         type: 'images',
@@ -14,8 +43,9 @@ function Picture({ left, right, pictureId, pictureItem, url, setBoard }) {
     const [{ }, drop] = useDrop(() => ({
         accept: 'images',
         drop: ({dragPictureId, dragPictureItem}, monitor) => {
-            console.log('drag = ', dragPictureId, dragPictureItem);
-            console.log('drop = ', pictureId, pictureItem);
+            console.log('drag = ', dragPictureId, dragPictureItem.id, dragPictureItem.title, getIndex(dragPictureItem.title));
+            console.log('drop = ', pictureId, pictureItem.id, pictureItem.title, getIndex(pictureItem.title));
+            console.log('will = ', getIdAfterCrash(dragPictureItem.title, pictureItem.title));
             const initial = monitor.getInitialSourceClientOffset()
             const differ = monitor.getDifferenceFromInitialOffset()
             if(initial) {
@@ -27,12 +57,13 @@ function Picture({ left, right, pictureId, pictureItem, url, setBoard }) {
                 // addImageToBoard(pictureItem, toado, pictureId, left, right)
 
                 // Todo: process idAfterCrash here
-                const idAfterCrash = 2;
-
-                setBoard(prev => {
-                    const newId = getRndInteger(11111, 99999);
-                    return [...prev, { ...iconLibrary[idAfterCrash], toado, pictureId: newId }]
-                });
+                const idAfterCrash = getIdAfterCrash(dragPictureItem.title, pictureItem.title);
+                if(idAfterCrash != -1) {
+                    setBoard(prev => {
+                        const newId = getRndInteger(11111, 99999);
+                        return [...prev, { ...iconLibrary[idAfterCrash], toado, pictureId: newId }]
+                    });
+                }
             }
         }
     }));
