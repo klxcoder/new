@@ -8,6 +8,8 @@ function getRndInteger(min, max) {
     return Math.floor(Math.random() * (max - min + 1) ) + min;
 }
 
+const sumBoard = (board) => board.map(icon => icon.pictureId);
+
 function Body() {
     const [board, setBoard] = useState([])
 
@@ -32,6 +34,7 @@ function Body() {
         setBoard(prev => {
             // if drag from left => will move
             if(left) {
+                console.log(`drag from LEFT to BOARD => will move ${pictureId} to new location ${JSON.stringify(toado)}`);
                 const newBoard = [...prev].map(icon => {
                     if(icon.pictureId === pictureId) {
                         const newIcon = {...icon};
@@ -45,18 +48,21 @@ function Body() {
             }
             // if drag from right => will add
             if (right) {
+                const newId = getRndInteger(11111, 99999);
+                console.log(`drag from RIGHT to BOARD => will add ${newId} to new location ${JSON.stringify(toado)}`);
                 // increase range of this range for more correct
                 // or use `uuid library` for generating unique number
-                const newId = getRndInteger(11111, 99999);
-                return [...prev, { ...iconLibrary[pictureItem.id], toado, pictureId: newId }]
+                const newBoard = [...prev, { ...iconLibrary[pictureItem.id], toado, pictureId: newId }];
+                console.log(`Sau khi add thi newBoard = `, sumBoard(newBoard));
+                return newBoard
             }
+            console.log(`this is prev`, prev);
             return prev;
         })
     }
-
+    console.log(`render this board`, sumBoard(board));
     return (
         <div className={styles.body} ref={drop} style={{ border: "" }}>
-
             <div>
                 {
                     board.map((icon, index) => {
@@ -77,7 +83,6 @@ function Body() {
                     <div className={styles.clearWorkspace}></div>
                 </div>
             </div>
-
         </div>
     )
 }

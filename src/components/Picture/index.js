@@ -14,6 +14,8 @@ const getIndex = (title) => {
     return -1;
 }
 
+const sumBoard = (board) => board.map(icon => icon.pictureId);
+
 const getIdAfterCrash = (dragTitle, dropTitle) => {
     // fire + air = energy
     // fire + water = steam
@@ -43,9 +45,6 @@ function Picture({ left, right, pictureId, pictureItem, url, setBoard }) {
     const [{ }, drop] = useDrop(() => ({
         accept: 'images',
         drop: ({dragPictureId, dragPictureItem}, monitor) => {
-            console.log('drag = ', dragPictureId, dragPictureItem.id, dragPictureItem.title, getIndex(dragPictureItem.title));
-            console.log('drop = ', pictureId, pictureItem.id, pictureItem.title, getIndex(pictureItem.title));
-            console.log('will = ', getIdAfterCrash(dragPictureItem.title, pictureItem.title));
             const initial = monitor.getInitialSourceClientOffset()
             const differ = monitor.getDifferenceFromInitialOffset()
             if(initial) {
@@ -53,18 +52,24 @@ function Picture({ left, right, pictureId, pictureItem, url, setBoard }) {
                     x: initial.x + differ.x,
                     y: initial.y + differ.y
                 }
-                console.log({toado});
                 const idAfterCrash = getIdAfterCrash(dragPictureItem.title, pictureItem.title);
+                console.log(`drag from ${dragPictureId}-${dragPictureItem.title} to ${pictureId}-${pictureItem.title}`);
                 if(idAfterCrash != -1) { // if collision occurs
+                    console.log('Collision occurs');
                     setBoard(prev => {
                         const newId = getRndInteger(11111, 99999);
                         // add icon after collison to the board
                         const newBoard = [...prev, { ...iconLibrary[idAfterCrash], toado, pictureId: newId }];
+                        console.log(`create new icon ${newId}-${iconLibrary[idAfterCrash].title}`)
+                        console.log('newBoard', sumBoard(newBoard));
                         // remove `drag icon` and remove `drop icon`
-                        return newBoard.filter(icon => icon.pictureId !== dragPictureId && icon.pictureId !== pictureId);
+                        const newBoardAfter = newBoard.filter(icon => icon.pictureId !== dragPictureId && icon.pictureId !== pictureId);
+                        console.log('newBoardAfter', sumBoard(newBoardAfter));
+                        return newBoardAfter;
                     });
                 } else { // if collison not occur
                     // will move drag icon to new toado
+                    console.log(`Collision NOT occurs => will move ${dragPictureId} to new location ${JSON.stringify(toado)}`);
                     setBoard(prev => {
                         const newBoard = [...prev].map(icon => {
                             if(icon.pictureId === dragPictureId) {
@@ -94,4 +99,5 @@ function Picture({ left, right, pictureId, pictureItem, url, setBoard }) {
     )
 }
 
-export default memo(Picture);
+// export default memo(Picture);
+export default Picture;
