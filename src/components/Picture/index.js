@@ -37,7 +37,7 @@ const getIdAfterCrash = (dragTitle, dropTitle) => {
     return getIndex(newTitle);
 }
 
-function Picture({ left, right, pictureId, pictureItem, url, setBoard }) {
+function Picture({ left, right, pictureId, pictureItem, url, setBoard, setIcons }) {
     const [{ }, dragSourceRef] = useDrag(() => ({
         type: 'images',
         item: { left, right, dragPictureItem:pictureItem, dragPictureId:pictureId },
@@ -56,32 +56,39 @@ function Picture({ left, right, pictureId, pictureItem, url, setBoard }) {
                 console.log(`drag from ${dragPictureId}-${dragPictureItem.title} to ${pictureId}-${pictureItem.title}`);
                 if(idAfterCrash != -1) { // if collision occurs
                     console.log('Collision occurs');
-                    setBoard(prev => {
-                        const newId = getRndInteger(11111, 99999);
-                        // add icon after collison to the board
-                        const newBoard = [...prev, { ...iconLibrary[idAfterCrash], toado, pictureId: newId }];
-                        console.log(`create new icon ${newId}-${iconLibrary[idAfterCrash].title}`)
-                        console.log('newBoard', sumBoard(newBoard));
-                        // remove `drag icon` and remove `drop icon`
-                        const newBoardAfter = newBoard.filter(icon => icon.pictureId !== dragPictureId && icon.pictureId !== pictureId);
-                        console.log('newBoardAfter', sumBoard(newBoardAfter));
-                        return newBoardAfter;
-                    });
+                    if(setBoard) {
+                        setBoard(prev => {
+                            const newId = getRndInteger(11111, 99999);
+                            // add icon after collison to the board
+                            const newBoard = [...prev, { ...iconLibrary[idAfterCrash], toado, pictureId: newId }];
+                            console.log(`create new icon ${newId}-${iconLibrary[idAfterCrash].title}`)
+                            console.log('newBoard', sumBoard(newBoard));
+                            // remove `drag icon` and remove `drop icon`
+                            const newBoardAfter = newBoard.filter(icon => icon.pictureId !== dragPictureId && icon.pictureId !== pictureId);
+                            console.log('newBoardAfter', sumBoard(newBoardAfter));
+                            return newBoardAfter;
+                        });
+                    }
+                    if(setIcons) {
+                        setIcons(prev => [...prev, iconLibrary[idAfterCrash].title])
+                    }
                 } else { // if collison not occur
                     // will move drag icon to new toado
                     console.log(`Collision NOT occurs => will move ${dragPictureId} to new location ${JSON.stringify(toado)}`);
-                    setBoard(prev => {
-                        const newBoard = [...prev].map(icon => {
-                            if(icon.pictureId === dragPictureId) {
-                                const newIcon = {...icon};
-                                // change old toado to new toado
-                                newIcon.toado = toado;
-                                return newIcon;
-                            }
-                            return icon;
-                        });
-                        return newBoard;
-                    })
+                    if(setBoard) {
+                        setBoard(prev => {
+                            const newBoard = [...prev].map(icon => {
+                                if(icon.pictureId === dragPictureId) {
+                                    const newIcon = {...icon};
+                                    // change old toado to new toado
+                                    newIcon.toado = toado;
+                                    return newIcon;
+                                }
+                                return icon;
+                            });
+                            return newBoard;
+                        })
+                    }
                 }
             }
         }

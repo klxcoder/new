@@ -10,9 +10,7 @@ function getRndInteger(min, max) {
 
 const sumBoard = (board) => board.map(icon => icon.pictureId);
 
-function Body() {
-    const [board, setBoard] = useState([])
-
+function Body({board, setBoard, setIcons}) {
     const [{ }, drop] = useDrop(() => ({
         accept: 'images',
         drop: ({ left, right, dragPictureItem, dragPictureId }, monitor) => {
@@ -67,7 +65,7 @@ function Body() {
                 {
                     board.map((icon, index) => {
                         return <div key={index} className={styles.iconImages} style={{ left: icon.toado.x, top: icon.toado.y }}>
-                            <Picture left={true} pictureId={icon.pictureId} pictureItem={icon} url={icon.images} setBoard={setBoard} />
+                            <Picture left={true} pictureId={icon.pictureId} pictureItem={icon} url={icon.images} setBoard={setBoard} setIcons={setIcons} />
                         </div>
                     })
                 }
